@@ -1,0 +1,79 @@
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Zoinks</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#" ng-click="toggleSidenav()"><i class="icon ion-navicon" style="font-size:25px;" ng-click="toggleSidenav()"></i></a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="status good" ng-show-auth="login">Hello! You are logged in.</span>
+            <span class="status" ng-show-auth="logout">Not logged in</span>
+            <span class="status error" ng-show-auth="error">{{auth.error}}</span>
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          <span ng-show="!signupMode">Login</span>
+          <span ng-show="signupMode">Register</span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form ng-submit="authSubmit()">
+            <div class="form-group">
+              <label for="">Email</label>
+              <input type="text" class="form-control" ng-model="email"/>
+            </div>
+            <div class="form-group">
+              <label for="">Password</label>
+              <input type="password" class="form-control" ng-model="password"/>
+            </div>
+            <div class="form-group" ng-show="signupMode">
+              <label for="">Confirm Password</label>
+              <input type="password" class="form-control" ng-model="confirm"/>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" ng-hide="signupMode" class="btn btn-primary">Log In</button>
+            <button type="submit" ng-click="signupMode = true" ng-hide="signupMode" class="btn btn-warning">Register</button>
+            <button type="submit" ng-cloak ng-show="signupMode" class="btn btn-primary">Create Account</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>

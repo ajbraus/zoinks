@@ -1,0 +1,13 @@
+
+
+User narratives of
+  planner
+    I want to plan a camping trip
+    I see "start a new trip" and I start a new trip, and see my trips
+  participant
+  like slack . . . what's the special sauce?
+
+database structure
+wireframes
+
+add fb auth
