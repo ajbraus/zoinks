@@ -1,4 +1,17 @@
+add forms for all the bits
+  invites
+add profile pictures to users
+setup ui-router
+add new event
 
+setup firebase
+  auth - email, fb, google
+currentUser claims requirement
+currentUser rsvps
+add chat
+
+Make sidenav animate in and out
+splashpage
 
 User narratives of
   planner
