@@ -1,3 +1,11 @@
+/*.animate-slide {
+  animation: 0.5s slideInLeft;
+}
+
+.animate-slide.ng-hide {
+  animation: 0.5s slideOutLeft;
+}
+*/
 a[ng-click]{
     cursor: pointer;
 }
@@ -49,6 +57,9 @@ a:hover {
 }
 .padding-top-bottom {
   padding:10px 0;
+}
+.margin-sides {
+  margin:0px 3px;
 }
 .chat {
   background-color: white;
@@ -150,4 +161,8 @@ fieldset {
  float: left;
  margin-right: 25px;
  padding: 25px;
+}
+
+.big {
+  font-size:150%;
 }

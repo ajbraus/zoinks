@@ -10,9 +10,9 @@ angular.module('myApp.routes', ['ngRoute'])
          controller: 'HomeCtrl'
       });
 
-      $routeProvider.when('/events/:id', {
-         templateUrl: 'partials/happening-show.html',
-         controller: 'HappeningShowCtrl'
+      $routeProvider.when('/zoink/:id', {
+         templateUrl: 'partials/zoink-show.html',
+         controller: 'ZoinkShowCtrl'
       });
 
       $routeProvider.when('/chat', {

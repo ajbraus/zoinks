@@ -3,84 +3,112 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-   .controller('MainCtrl', ['$scope', 'loginService', function($scope, loginService) {
+   .controller('MainCtrl', ['$scope', '$rootScope', 'loginService', function($scope, $rootScope, loginService) {
       $scope.logout = function() {
          loginService.logout();
       };
 
-      // $scope.toggleSidenav = function() {
-      //    if ($scope.showSidenav) {
-      //       $scope.showSidenav = false;   
-      //    } else {
-      //       $scope.showSidenav = true;
-      //    }
-      // }
+      $scope.toggleSidenav = function() {
+         $scope.$broadcast('toggleSidenav');
+      }
+
+      $scope.createZoink = function() {
+         Zoink.save($scope.zoink, 
+            function (data) {
+
+            },
+            function (error) {
+
+            }
+         )
+         $scope.zoink = {};
+         //TODO HIDE MODAL
+      }
    }])
 
    .controller('HomeCtrl', ['$scope', 'syncData', function($scope, syncData) {
       syncData('syncedValue').$bind($scope, 'syncedValue');
    }])
 
-   .controller('HappeningsIndexCtrl', ['$scope', 'Happening', function($scope, Happening) {
-      $scope.happenings = Happening.all();
+   .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', 'Zoink', function($scope, $rootScope, Zoink) {
+      $scope.zoinks = Zoink.all();
+
+      $scope.showSidenav = true;
+      $scope.$on('toggleSidenav', function() {
+         $scope.showSidenav = !$scope.showSidenav;
+      })
    }])
 
-   .controller('HappeningShowCtrl', ['$scope', 'syncData', '$routeParams', 'Happening', function($scope, syncData, $routeParams, Happening) {
-      $scope.happening = Happening.get($routeParams.id);
+   .controller('ZoinkShowCtrl', ['$scope', 'syncData', '$routeParams', 'Zoink', function($scope, syncData, $routeParams, Zoink) {
+      $scope.zoink = Zoink.get($routeParams.id);
+      
+      $scope.showSidenav = true;
+      $scope.$on('toggleSidenav', function() {
+         $scope.showSidenav = !$scope.showSidenav;
+      })
+
+      // TODO
+      // $scope.invited = currentUser.email.indexOf($scope.zoink.invites) > -1;
+      // $scope.rsvped = currentUser.indexOf($scope.zoink.rsvps) > -1;
+
+      $scope.rsvp = function() {
+         // TODO
+         if (!$scope.rsvped) {
+            // $scope.zoink.rsvps.push(currentUser);   
+         } else {
+            // splice currentUser out of $scope.zoink.rsvps
+         }
+         $scope.rsvped = !$scope.rsvped;
+      }
+
+      $scope.joinCar = function(carpool) {
+         // TODO
+         // carpool.push(currenUser);
+      }
+
+      $scope.claimRequirement = function(requirement) {
+         // TODO
+         // requirement.owner.push(currentUser);
+         // display owner in template
+      }
 
       // CARPOOLS
       $scope.toggleNewCarpool = function() {
-         if ($scope.newCarpool == true) {
-            $scope.newCarpool = false;
-         } else {
-            $scope.newCarpool = true;
-         }
+         $scope.newCarpool = !$scope.newCarpool;
       }
       $scope.addCarpool = function() {
          // carpool.driver = currentUser;
-         $scope.happening.carpools.unshift($scope.carpool)
+         $scope.zoink.carpools.unshift($scope.carpool)
          $scope.newCarpool = false;
          $scope.carpool = {};
       }
 
       // REQUIREMENTS
       $scope.toggleNewRequirement = function() {
-         if ($scope.newRequirement == true) {
-            $scope.newRequirement = false;
-         } else {
-            $scope.newRequirement = true;
-         }
+         $scope.newRequirement = !$scope.newRequirement;
       }
       $scope.addRequirement = function() {
-         $scope.happening.requirements.unshift($scope.requirement)
+         $scope.zoink.requirements.unshift($scope.requirement)
          $scope.newRequirement = false;
          $scope.requirement = {};
       }
 
       // TODOS
       $scope.toggleNewTodo = function() {
-         if ($scope.newTodo == true) {
-            $scope.newTodo = false;
-         } else {
-            $scope.newTodo = true;
-         }
+         $scope.newTodo = !$scope.newTodo;
       }
       $scope.addTodo = function() {
-         $scope.happening.todos.unshift($scope.todo)
+         $scope.zoink.todos.unshift($scope.todo)
          $scope.newTodo = false;
          $scope.todo = {};
       }
 
       // INVITES
       $scope.toggleNewInvite = function() {
-         if ($scope.newInvite == true) {
-            $scope.newInvite = false;
-         } else {
-            $scope.newInvite = true;
-         }
+         $scope.newInvite = !$scope.newInvite;
       }
       $scope.addInvite = function() {
-         $scope.happening.invites.unshift($scope.invite)
+         $scope.zoink.invites.unshift($scope.invite)
          $scope.newInvite = false;
          $scope.invite = {};
       }

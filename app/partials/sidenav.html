@@ -1,0 +1,53 @@
+<div class="col-sm-3 col-md-2 whole-height dark-sidebar " 
+     ng-controller="ZoinksIndexCtrl" 
+     ng-show="showSidenav">
+     <!-- ng-class="{'animate-slide': showSidenav, '': !showSidenav} " -->
+     <!-- ng-click="slide=!slide" -->
+  <div class="text-center margin-top">
+    <a class="btn btn-info btn-block" data-toggle="modal" data-target="#new-zoink">New Zoink</a>        
+  </div>
+  <ul class='margin-top'>
+    <a ng-repeat="zoink in zoinks" href="#/zoink/{{zoink.id}}">
+      <li>
+        <b>{{zoink.title}}</b> 
+        <br>
+        <small class='text-muted'>{{zoink.happeningOn}}</small>
+      </li>
+    </a>
+  </ul>
+</div>
+ <!-- ng-show="showSidenav" -->
+
+ <!-- Modal -->
+ <div class="modal fade" id="new-zoink" tabindex="-1" role="dialog" aria-labelledby="new-zoinkLabel">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <form ng-submit="createZoink()">
+         <div class="modal-body">
+          <div class="form-group">
+            <label for="">Title*</label>
+            <input type="text" class="form-control" ng-model="event.title" required/>
+          </div>
+          <div class="form-group">
+            <label for="">Location</label>
+            <input type="text" class="form-control" ng-model="event.location"/>
+          </div>
+          <div class="row">
+            <div class="form-group col-xs-6">
+              <label for="">Starts At</label>
+              <input type="text" class="form-control" ng-model="event.startsAt"/>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="">Ends At</label>
+              <input type="text" class="form-control" ng-model="event.endsAt"/>
+            </div>
+          </div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="submit" class="btn btn-primary">Zoink!</button>
+         </div>
+       </form>
+     </div>
+   </div>
+ </div>

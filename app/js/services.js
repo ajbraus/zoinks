@@ -5,14 +5,14 @@
 
    angular.module('myApp.services', ['myApp.service.login', 'myApp.service.firebase'])
 
-    .service('Happening', [function() {
+    .service('Zoink', [function() {
       var users = [
-        { name: "Bob Daniels"},
-        { name: "Matthew Charley"},
-        { name: "Mary Sonja"}
+        { name: "Bob Daniels", picUrl: "http://www.realtimearts.net/data/images/art/46/4640_profile_nilssonpolias.jpg"},
+        { name: "Matthew Charley", picUrl: "http://www.realtimearts.net/data/images/art/46/4640_profile_nilssonpolias.jpg"},
+        { name: "Mary Sonja", picUrl: "http://www.realtimearts.net/data/images/art/46/4640_profile_nilssonpolias.jpg"}
       ]
 
-      var happenings = [{
+      var zoinks = [{
         id: 0,
         title: "Zen Camping",
         location: "Camp Fort Doggity Dog",
@@ -56,15 +56,15 @@
 
       return {
         all: function() {
-          return happenings;
+          return zoinks;
         },
-        remove: function(happening) {
-          happenings.splice(happenings.indexOf(happening), 1);
+        remove: function(zoink) {
+          zoinks.splice(zoinks.indexOf(zoink), 1);
         },
-        get: function(happeningId) {
-          for (var i = 0; i < happenings.length; i++) {
-            if (happenings[i].id === parseInt(happeningId)) {
-              return happenings[i];
+        get: function(zoinkId) {
+          for (var i = 0; i < zoinks.length; i++) {
+            if (zoinks[i].id === parseInt(zoinkId)) {
+              return zoinks[i];
             }
           }
           return null;

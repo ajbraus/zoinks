@@ -1,0 +1,143 @@
+<ng-include src="'partials/sidenav.html'"></ng-include>
+<div ng-class="showSidenav ? 'col-md-10 col-sm-9' : 'col-sm-12'" 
+     class="box-shadow-left whole-height main no-padding">
+  <div class="col-sm-8 col-md-9 position-relative">
+    <div class="clearfix col-xs-12">
+      <div class="pull-left">
+        <h4>{{zoink.title}} 
+          <small class='text-muted small'>
+            at 
+            <a href="http://maps.google.com/?q={{zoink.location}}" target="_blank">
+              {{zoink.location}}              
+            </a>
+          </small>
+        </h4>
+        <h5>{{zoink.startsAt}} - {{zoink.endsAt}}</h5>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+<!--           <div class="card">
+            <div class="card-header clearfix">
+              <h5 class='pull-left'>Location</h5>
+              <a class="pull-right btn btn-link">open map</a>
+            </div>
+            <div class="card-body">
+              <div class="clearfix">
+                <div class="pull-left">
+                  Tazmania
+                </div>
+                <div class="map pull-right margin-top">
+                  <img src="http://www.placehold.it/150x150" alt="" class="img-responsive">
+                </div>
+              </div>
+            </div>
+          </div>   -->
+          <div class="card">
+            <div class="card-header clearfix">
+              <h5 class='pull-left'>Volunteers Needed</h5>
+              <a class="pull-right btn btn-link" ng-click="toggleNewRequirement()" ng-disabled="!rspved">Add</a>
+            </div>
+            <div class="card-body">
+              <form ng-submit="addRequirement()" ng-show="newRequirement">
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="requirement.body" focus-me="{{newRequirement}}"/>
+                </div>
+              </form>
+              <div class="list-group">
+                <div class="list-group-item" ng-repeat="r in zoink.requirements">{{r.body}}</div>
+              </div>
+            </div>
+          </div>  
+          <div class="card">
+            <div class="card-header clearfix">
+              <h5 class="pull-left">Cars</h5>
+              <a ng-click="toggleNewCarpool()" class="pull-right btn btn-link" ng-disabled="!rspved">Add</a>
+            </div>
+            <div class="card-body">
+              <form ng-submit="addCarpool()" ng-show="newCarpool">
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="carpool.name" focus-me="{{newCarpool}}"/>
+                </div>
+              </form>
+              <div class="list-group">
+                <div class="list-group-item" ng-repeat="carpool in zoink.carpools">
+                  <div class="clearfix">
+                    <div class="pull-left">
+                      {{carpool.name}}
+                    </div>
+                    <div class="pull-right">
+                      <a ng-click="joinCarpool(carpool)" class='margin-sides btn btn-sm btn-default pull-right'><i class='icon ion-plus-circled big'></i></a>
+                      <img ng-repeat="passenger in carpool.passengers" ng-src="{{passenger.picUrl}}" class="img-responsive img-circle pull-right margin-sides" width="40px"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  
+          </div>
+          <div class="card">
+            <div class="card-header clearfix">
+              <h5 class='pull-left'>How to Prepare</h5>
+              <a class="pull-right btn btn-link" ng-click="toggleNewTodo()" ng-disabled="!rspved">Add</a>
+            </div>
+            <div class="card-body">
+              <form ng-submit="addTodo()" ng-show="newTodo">
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="todo" focus-me="{{newTodo}}"/>
+                </div>
+              </form>
+              <div class="list-group">
+                <div class="list-group-item" ng-repeat="todo in zoink.todos">{{todo}}</div>
+              </div>
+            </div>
+          </div>  
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-header clearfix">
+              <h5 class='pull-left'>RSVPs</h5>
+              <a ng-click="rsvp()" ng-disable="rsvped || !invited" class="btn btn-primary pull-right">RSVP</a>
+            </div>
+            <div class="card-body">
+              <div class="media" ng-repeat="rsvp in zoink.rsvps">
+                <div class="media-left">
+                  <a href="#">
+                    <img ng-src="{{rsvp.picUrl}}" class="media-object img-circle" width="40px" alt="{{rsvp.name}}">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h5 class="media-heading">{{rsvp.name}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>  
+          <div class="card">
+            <div class="card-header clearfix">
+              <h5 class='pull-left'>Invites</h5>
+              <a class="pull-right btn btn-link" ng-click="toggleNewInvite()" ng-disabled="!rspved">Add</a>
+            </div>
+            <div class="card-body">
+              <form ng-submit="addInvite()" ng-show="newInvite">
+                <div class="form-group">
+                  <input type="text" class="form-control" required ng-model="invite" focus-me="{{newInvite}}"/>
+                </div>
+              </form>
+              <p ng-repeat="invite in zoink.invites">{{invite}}</p>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 col-md-3 chat box-shadow-left whole-height">
+    <form>
+      <div class="form-group">
+        <textarea name="" id="" class="form-control"></textarea>
+      </div>
+      <div class="text-right">
+        <button class="btn btn-success btn-sm">Send</button>
+      </div>          
+    </form>
+  </div>
+</div>    

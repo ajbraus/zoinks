@@ -9,18 +9,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Zoinks</a>
+      <a class="navbar-brand" href="#/">Zoinks</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a ng-click="toggleSidenav()"><i class="icon ion-navicon" style="font-size:25px;" ng-click="toggleSidenav()"></i></a></li>
+        <li><a ng-click="toggleSidenav()"><i class="icon ion-navicon" style="font-size:25px;"></i></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
+        <li><a data-toggle="modal" data-target="#login-modal">Login</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="status good" ng-show-auth="login">Hello! You are logged in.</span>
             <span class="status" ng-show-auth="logout">Not logged in</span>
             <span class="status error" ng-show-auth="error">{{auth.error}}</span>

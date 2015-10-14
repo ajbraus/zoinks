@@ -1,17 +1,19 @@
-add forms for all the bits
-  invites
-add profile pictures to users
-setup ui-router
-add new event
-
 setup firebase
-  auth - email, fb, google
-currentUser claims requirement
+  auth - email
+currentUser creates zoink
 currentUser rsvps
-add chat
+add invites (send email), requirements, todos, and carpools
+currentUser claims requirement
+post chat in zoink chat room
 
-Make sidenav animate in and out
+
 splashpage
+	- plan participatory events
+	- no more endless email chains and chat rooms
+	- clear responsibilities
+	- setup in a flash
+	- 5 invites for free
+
 
 User narratives of
   planner
@@ -24,3 +26,8 @@ database structure
 wireframes
 
 add fb auth
+
+
+DONE new event modal - title*, location, starts and ends at
+DONE only allow adding stuff if you are rsvped
+DONE add profile pictures to users
