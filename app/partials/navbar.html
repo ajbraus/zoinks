@@ -18,12 +18,12 @@
         <li><a ng-click="toggleSidenav()"><i class="icon ion-navicon" style="font-size:25px;"></i></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a data-toggle="modal" data-target="#login-modal">Login</a></li>
+        <li ng-hide="loggedIn"><a data-toggle="modal" data-target="#login-modal">Login</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span class="status good" ng-show-auth="login">Hello! You are logged in.</span>
-            <span class="status" ng-show-auth="logout">Not logged in</span>
-            <span class="status error" ng-show-auth="error">{{auth.error}}</span>
+            <span class="status good" ng-show="loggedIn">Hello! You are logged in.</span>
+            <span class="status" ng-show="!loggedIn">Not logged in</span>
+            <span class="status error">{{auth.error}}</span>
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
@@ -31,7 +31,7 @@
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a ng-click="logout()">Logout</a></li>
           </ul>
         </li>
       </ul>
@@ -42,7 +42,7 @@
 
 
 <!-- LOGIN MODAL -->
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" ng-controller="LoginCtrl">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
@@ -53,7 +53,8 @@
         </h4>
       </div>
       <div class="modal-body">
-        <form ng-submit="authSubmit()">
+      <div class="alert alert-danger" ng-show="err">{{err}}</div>
+        <form>
             <div class="form-group">
               <label for="">Email</label>
               <input type="text" class="form-control" ng-model="email"/>
@@ -69,9 +70,9 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" ng-hide="signupMode" class="btn btn-primary">Log In</button>
+            <button type="submit" ng-hide="signupMode" ng-click="login()" class="btn btn-primary">Log In</button>
             <button type="submit" ng-click="signupMode = true" ng-hide="signupMode" class="btn btn-warning">Register</button>
-            <button type="submit" ng-cloak ng-show="signupMode" class="btn btn-primary">Create Account</button>
+            <button type="submit" ng-cloak ng-show="signupMode" ng-click="createAccount()" class="btn btn-primary">Create Account</button>
           </div>
         </form>
     </div>

@@ -3,9 +3,23 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-   .controller('MainCtrl', ['$scope', '$rootScope', 'loginService', function($scope, $rootScope, loginService) {
+   .controller('MainCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+      function authDataCallback(authData) {
+        if (authData) {
+         $scope.loggedIn = true;
+         console.log("User " + authData.uid + " is logged in with " + authData.provider);
+        } else {
+         $scope.loggedIn = false;
+         console.log("User is logged out");
+        }
+      }
+
+      var ref = new Firebase("https://hoosin.firebaseio.com");
+      ref.onAuth(authDataCallback);
+
       $scope.logout = function() {
-         loginService.logout();
+         ref.unauth();
+         $scope.loggedIn = false
       };
 
       $scope.toggleSidenav = function() {
@@ -26,8 +40,8 @@ angular.module('myApp.controllers', [])
       }
    }])
 
-   .controller('HomeCtrl', ['$scope', 'syncData', function($scope, syncData) {
-      syncData('syncedValue').$bind($scope, 'syncedValue');
+   .controller('HomeCtrl', ['$scope', function($scope) {
+
    }])
 
    .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', 'Zoink', function($scope, $rootScope, Zoink) {
@@ -115,79 +129,63 @@ angular.module('myApp.controllers', [])
       
    }])
 
-  .controller('ChatCtrl', ['$scope', 'syncData', function($scope, syncData) {
-      $scope.newMessage = null;
-
-      // constrain number of messages by limit into syncData
-      // add the array into $scope.messages
-      $scope.messages = syncData('messages', 10);
-
-      // add new messages to the list
-      $scope.addMessage = function() {
-         if( $scope.newMessage ) {
-            $scope.messages.$add({text: $scope.newMessage});
-            $scope.newMessage = null;
-         }
-      };
-   }])
-
-   .controller('LoginCtrl', ['$scope', 'loginService', '$location', function($scope, loginService, $location) {
+   .controller('LoginCtrl', ['$scope', '$location', function($scope, $location) {
       $scope.email = null;
       $scope.password = null;
       $scope.confirm = null;
       $scope.signupMode = false;
+      var ref = new Firebase("https://hoosin.firebaseio.com");
 
-      $scope.login = function(cb) {
+      $scope.login = function() {
          $scope.err = null;
-         if( !$scope.email ) {
-            $scope.err = 'Please enter an email address';
-         }
-         else if( !$scope.pass ) {
-            $scope.err = 'Please enter a password';
-         }
-         else {
-            loginService.login($scope.email, $scope.pass, function(err, user) {
-               $scope.err = err? err + '' : null;
-               if( !err ) {
-                  cb && cb(user);
-               }
+         console.log('logging in')
+
+         if (assertValidLoginAttempt()) {
+            ref.authWithPassword({
+              email    : $scope.email,
+              password : $scope.password
+            }, function(error, authData) {
+              if (error) {
+                switch (error.code) {
+                  case "INVALID_EMAIL":
+                    $scope.err = "Email or password incorrect"
+                    break;
+                  case "INVALID_PASSWORD":
+                    $scope.err = "Email or password incorrect"
+                    break;
+                  case "INVALID_USER":
+                    $scope.err = "No account found"
+                    break;
+                  default:
+                    $scope.err = "Error logging user in: " + error;
+                }
+              } else {
+                console.log("Authenticated successfully with payload:", authData);
+                $scope.loggedIn = true;
+              }
             });
          }
       };
 
       $scope.createAccount = function() {
          $scope.err = null;
-         if( assertValidLoginAttempt() ) {
-            loginService.createAccount($scope.email, $scope.pass, function(err, user) {
-               if( err ) {
-                  $scope.err = err? err + '' : null;
-               }
-               else {
-                  // must be logged in before I can write to my profile
-                  $scope.login(function() {
-                     loginService.createProfile(user.uid, user.email);
-                     $location.path('/account');
-                  });
-               }
-            });
-         }
       };
 
       function assertValidLoginAttempt() {
          if( !$scope.email ) {
             $scope.err = 'Please enter an email address';
          }
-         else if( !$scope.pass ) {
+         else if( !$scope.password ) {
             $scope.err = 'Please enter a password';
          }
-         else if( $scope.pass !== $scope.confirm ) {
+         else if( $scope.signupMode && ($scope.password !== $scope.confirm) ) {
             $scope.err = 'Passwords do not match';
          }
          return !$scope.err;
       }
    }])
 
-   .controller('AccountCtrl', ['$scope', 'loginService', 'syncData', '$location', function($scope, loginService, syncData, $location) {
+   .controller('AccountCtrl', ['$scope', 'syncData', '$location', function($scope, syncData, $location) {
       syncData(['users', $scope.auth.user.uid]).$bind($scope, 'user');
 
       $scope.oldpass = null;
@@ -201,7 +199,6 @@ angular.module('myApp.controllers', [])
 
       $scope.updatePassword = function() {
          $scope.reset();
-         loginService.changePassword(buildPwdParms());
       };
 
       function buildPwdParms() {
@@ -224,4 +221,22 @@ angular.module('myApp.controllers', [])
          }
       }
 
-   }]);
+   }])
+
+   .controller('ChatCtrl', ['$scope', 'syncData', function($scope, syncData) {
+       $scope.newMessage = null;
+
+       // constrain number of messages by limit into syncData
+       // add the array into $scope.messages
+       $scope.messages = syncData('messages', 10);
+
+       // add new messages to the list
+       $scope.addMessage = function() {
+          if( $scope.newMessage ) {
+             $scope.messages.$add({text: $scope.newMessage});
+             $scope.newMessage = null;
+          }
+       };
+   }])
+
+    ;

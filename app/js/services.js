@@ -3,7 +3,7 @@
 
    /* Services */
 
-   angular.module('myApp.services', ['myApp.service.login', 'myApp.service.firebase'])
+   angular.module('myApp.services', [])
 
     .service('Zoink', [function() {
       var users = [
