@@ -1,10 +1,19 @@
+shared purchases to split the cost!
+fix layout so things are a bit more narrow and engage the eye
+
 setup firebase
-  auth - email
+  auth - email 
+    after login/signup remove modal, broadcast login
 currentUser creates zoink
 currentUser rsvps
 add invites (send email), requirements, todos, and carpools
 currentUser claims requirement
 post chat in zoink chat room
+
+send emails w firebase: https://zapier.com/zapbook/firebase/sendgrid/29752/firebase-added-a-child-record-to-sendgrid-send-email/
+  invites
+  updates
+  someone joined your carpool
 
 
 splashpage

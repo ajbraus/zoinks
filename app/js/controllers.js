@@ -53,7 +53,7 @@ angular.module('myApp.controllers', [])
       })
    }])
 
-   .controller('ZoinkShowCtrl', ['$scope', 'syncData', '$routeParams', 'Zoink', function($scope, syncData, $routeParams, Zoink) {
+   .controller('ZoinkShowCtrl', ['$scope', '$routeParams', 'Zoink', function($scope, $routeParams, Zoink) {
       $scope.zoink = Zoink.get($routeParams.id);
       
       $scope.showSidenav = true;
@@ -185,8 +185,8 @@ angular.module('myApp.controllers', [])
       }
    }])
 
-   .controller('AccountCtrl', ['$scope', 'syncData', '$location', function($scope, syncData, $location) {
-      syncData(['users', $scope.auth.user.uid]).$bind($scope, 'user');
+   .controller('AccountCtrl', ['$scope', '$location', function($scope, $location) {
+      // syncData(['users', $scope.auth.user.uid]).$bind($scope, 'user');
 
       $scope.oldpass = null;
       $scope.newpass = null;
@@ -223,12 +223,10 @@ angular.module('myApp.controllers', [])
 
    }])
 
-   .controller('ChatCtrl', ['$scope', 'syncData', function($scope, syncData) {
+   .controller('ChatCtrl', ['$scope', function($scope) {
        $scope.newMessage = null;
 
-       // constrain number of messages by limit into syncData
-       // add the array into $scope.messages
-       $scope.messages = syncData('messages', 10);
+       // $scope.messages = syncData('messages', 10);
 
        // add new messages to the list
        $scope.addMessage = function() {
