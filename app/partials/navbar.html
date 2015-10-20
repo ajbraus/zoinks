@@ -18,7 +18,8 @@
         <li><a ng-click="toggleSidenav()"><i class="icon ion-navicon" style="font-size:25px;"></i></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-hide="loggedIn"><a data-toggle="modal" data-target="#login-modal">Login</a></li>
+        <li><a>Prices</a></li>
+        <li ng-hide="loggedIn"><a data-toggle="modal" data-target="#login-modal">Connect</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="status good" ng-show="loggedIn">Hello! You are logged in.</span>
@@ -42,7 +43,7 @@
 
 
 <!-- LOGIN MODAL -->
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" ng-controller="LoginCtrl">
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
@@ -57,22 +58,23 @@
         <form>
             <div class="form-group">
               <label for="">Email</label>
-              <input type="text" class="form-control" ng-model="email"/>
+              <input type="text" class="form-control" ng-model="user.email"/>
             </div>
             <div class="form-group">
               <label for="">Password</label>
-              <input type="password" class="form-control" ng-model="password"/>
+              <input type="password" class="form-control" ng-model="user.password"/>
             </div>
             <div class="form-group" ng-show="signupMode">
               <label for="">Confirm Password</label>
-              <input type="password" class="form-control" ng-model="confirm"/>
+              <input type="password" class="form-control" ng-model="user.confirm"/>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <a ng-click="signupMode = true" ng-hide="signupMode" class="btn btn-link">Register</a>
             <button type="submit" ng-hide="signupMode" ng-click="login()" class="btn btn-primary">Log In</button>
-            <button type="submit" ng-click="signupMode = true" ng-hide="signupMode" class="btn btn-warning">Register</button>
-            <button type="submit" ng-cloak ng-show="signupMode" ng-click="createAccount()" class="btn btn-primary">Create Account</button>
+
+            <a ng-click="signupMode = false" ng-show="signupMode" class="btn btn-link">Login</a>
+            <button type="submit" ng-cloak ng-show="signupMode" ng-click="createAccount()" class="btn btn-primary">Sign Up</button>
           </div>
         </form>
     </div>

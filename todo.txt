@@ -1,20 +1,21 @@
-shared purchases to split the cost!
-fix layout so things are a bit more narrow and engage the eye
-
-setup firebase
-  auth - email 
-    after login/signup remove modal, broadcast login
-currentUser creates zoink
+create zoink
 currentUser rsvps
-add invites (send email), requirements, todos, and carpools
+add invites (send email), purchase, requirements, todos, and carpools
+  disable buttons if not rspved
 currentUser claims requirement
 post chat in zoink chat room
+
+prices modal
+  - Free: Planner and 4 Invites 
+  - 6.99: Planner and 12 Invites
+  - 14.99: Planner and 40 Invites
+  - 29.99: Planner and 100 Invites
+add stripe to buy zoinks
 
 send emails w firebase: https://zapier.com/zapbook/firebase/sendgrid/29752/firebase-added-a-child-record-to-sendgrid-send-email/
   invites
   updates
   someone joined your carpool
-
 
 splashpage
 	- plan participatory events
@@ -40,3 +41,5 @@ add fb auth
 DONE new event modal - title*, location, starts and ends at
 DONE only allow adding stuff if you are rsvped
 DONE add profile pictures to users
+  auth - email 
+    DONE after login/signup remove modal, broadcast login

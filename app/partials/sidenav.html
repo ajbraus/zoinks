@@ -19,27 +19,27 @@
  <!-- ng-show="showSidenav" -->
 
  <!-- Modal -->
- <div class="modal fade" id="new-zoink" tabindex="-1" role="dialog" aria-labelledby="new-zoinkLabel">
+ <div ng-controller="NewZoinkCtrl" class="modal fade" id="new-zoink" tabindex="-1" role="dialog" aria-labelledby="new-zoinkLabel">
    <div class="modal-dialog" role="document">
      <div class="modal-content">
        <form ng-submit="createZoink()">
          <div class="modal-body">
           <div class="form-group">
             <label for="">Title*</label>
-            <input type="text" class="form-control" ng-model="event.title" required/>
+            <input type="text" class="form-control" ng-model="zoink.title" required/>
           </div>
           <div class="form-group">
             <label for="">Location</label>
-            <input type="text" class="form-control" ng-model="event.location"/>
+            <input type="text" class="form-control" ng-model="zoink.location"/>
           </div>
           <div class="row">
             <div class="form-group col-xs-6">
               <label for="">Starts At</label>
-              <input type="text" class="form-control" ng-model="event.startsAt"/>
+              <input type="text" class="form-control" ng-model="zoink.startsAt"/>
             </div>
             <div class="form-group col-xs-6">
               <label for="">Ends At</label>
-              <input type="text" class="form-control" ng-model="event.endsAt"/>
+              <input type="text" class="form-control" ng-model="zoink.endsAt"/>
             </div>
           </div>
          </div>

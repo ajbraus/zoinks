@@ -6,7 +6,11 @@
   animation: 0.5s slideOutLeft;
 }
 */
-a[ng-click]{
+
+.jumbotron {
+  padding:100px 0 130px 0;
+}
+a{
     cursor: pointer;
 }
 

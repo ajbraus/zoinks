@@ -4,18 +4,97 @@
 
 angular.module('myApp.controllers', [])
    .controller('MainCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+      $scope.signupMode = false;
+      $scope.user = {};
+
       function authDataCallback(authData) {
         if (authData) {
-         $scope.loggedIn = true;
-         console.log("User " + authData.uid + " is logged in with " + authData.provider);
+          $scope.loggedIn = true;
+          console.log("User " + authData.uid + " is logged in with " + authData.provider);
+          $scope.user = {};
         } else {
-         $scope.loggedIn = false;
-         console.log("User is logged out");
+          $scope.loggedIn = false;
+          console.log("User is logged out");
         }
+      }
+
+      function assertValidLoginAttempt(user) {
+         if(!user.email) {
+            console.log(user)
+            $scope.err = 'Please enter an email address';
+         }
+         else if(!user.password) {
+            $scope.err = 'Please enter a password';
+         }
+         else if(user.signupMode && (user.password !== user.confirm) ) {
+            $scope.err = 'Passwords do not match';
+         }
+         return !$scope.err;
       }
 
       var ref = new Firebase("https://hoosin.firebaseio.com");
       ref.onAuth(authDataCallback);
+
+      function handleAuthError(error) {
+        switch (error.code) {
+          case "INVALID_EMAIL":
+            $scope.err = "Email or password incorrect"
+            break;
+          case "INVALID_PASSWORD":
+            $scope.err = "Email or password incorrect"
+            break;
+          case "INVALID_USER":
+            $scope.err = "No account found"
+            break;
+          case "EMAIL_TAKEN":
+            $scope.err = "Email already taken"
+            break;
+          default:
+            $scope.err = "Error connecting: " + error;
+        }
+      }
+
+      $scope.login = function() {
+         $scope.err = null;
+         console.log('logging in')
+
+         if (assertValidLoginAttempt($scope.user)) {
+            ref.authWithPassword($scope.user, function(error, authData) {
+              if (error) { 
+                handleAuthError(error);
+              } else {
+                authDataCallback(authData);
+                $scope.$apply(function() {
+                  $('#login-modal').modal('hide');
+                });
+              }
+            });
+         }
+      };
+
+      $scope.createAccount = function() {
+        if (assertValidLoginAttempt($scope.user)) {
+          ref.createUser({
+            email: $scope.user.email,
+            password: $scope.user.password
+          }, function(error, userData) {
+            if (error) {
+              handleAuthError(error);
+            } else {
+              console.log("Successfully created user account with uid:", userData.uid);
+              ref.authWithPassword({
+                email: $scope.user.email,
+                password: $scope.user.password
+              }, function(error, authData) {
+                authDataCallback(authData);
+                $scope.$apply(function() {
+                  $('#login-modal').modal('hide');
+                });
+              })
+            }
+          });
+        }
+      };
 
       $scope.logout = function() {
          ref.unauth();
@@ -51,6 +130,16 @@ angular.module('myApp.controllers', [])
       $scope.$on('toggleSidenav', function() {
          $scope.showSidenav = !$scope.showSidenav;
       })
+   }])
+
+   .controller('NewZoinkCtrl', ['$scope', 'Zoink', '$location', function($scope, Zoink, $location) {
+      $scope.zoink = {};
+      $scope.createZoink = function() {
+        console.log($scope.zoink)
+        Zoink.save($scope.zoink, function(zoink) {
+          $location.path('/zoink' + zoink.id)
+        })
+      }
    }])
 
    .controller('ZoinkShowCtrl', ['$scope', '$routeParams', 'Zoink', function($scope, $routeParams, Zoink) {
@@ -127,62 +216,6 @@ angular.module('myApp.controllers', [])
          $scope.invite = {};
       }
       
-   }])
-
-   .controller('LoginCtrl', ['$scope', '$location', function($scope, $location) {
-      $scope.email = null;
-      $scope.password = null;
-      $scope.confirm = null;
-      $scope.signupMode = false;
-      var ref = new Firebase("https://hoosin.firebaseio.com");
-
-      $scope.login = function() {
-         $scope.err = null;
-         console.log('logging in')
-
-         if (assertValidLoginAttempt()) {
-            ref.authWithPassword({
-              email    : $scope.email,
-              password : $scope.password
-            }, function(error, authData) {
-              if (error) {
-                switch (error.code) {
-                  case "INVALID_EMAIL":
-                    $scope.err = "Email or password incorrect"
-                    break;
-                  case "INVALID_PASSWORD":
-                    $scope.err = "Email or password incorrect"
-                    break;
-                  case "INVALID_USER":
-                    $scope.err = "No account found"
-                    break;
-                  default:
-                    $scope.err = "Error logging user in: " + error;
-                }
-              } else {
-                console.log("Authenticated successfully with payload:", authData);
-                $scope.loggedIn = true;
-              }
-            });
-         }
-      };
-
-      $scope.createAccount = function() {
-         $scope.err = null;
-      };
-
-      function assertValidLoginAttempt() {
-         if( !$scope.email ) {
-            $scope.err = 'Please enter an email address';
-         }
-         else if( !$scope.password ) {
-            $scope.err = 'Please enter a password';
-         }
-         else if( $scope.signupMode && ($scope.password !== $scope.confirm) ) {
-            $scope.err = 'Passwords do not match';
-         }
-         return !$scope.err;
-      }
    }])
 
    .controller('AccountCtrl', ['$scope', '$location', function($scope, $location) {
