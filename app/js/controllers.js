@@ -135,7 +135,7 @@ angular.module('myApp.controllers', [])
    .controller('NewZoinkCtrl', ['$scope', 'Zoink', '$location', function($scope, Zoink, $location) {
       $scope.zoink = {};
       $scope.createZoink = function() {
-        console.log($scope.zoink)
+        console.log($scope.zoink);
         Zoink.save($scope.zoink, function(zoink) {
           $location.path('/zoink' + zoink.id)
         })
