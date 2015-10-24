@@ -37,7 +37,7 @@
           <div class="card">
             <div class="card-header clearfix">
               <h5 class='pull-left'>Volunteers Needed</h5>
-              <a class="pull-right btn btn-link" ng-click="toggleNewRequirement()" ng-disabled="!rspved">Add</a>
+              <a class="pull-right btn btn-link" ng-click="toggleNewRequirement()" ng-hide="!rspved">Add</a> 
             </div>
             <div class="card-body">
               <form ng-submit="addRequirement()" ng-show="newRequirement">
@@ -53,7 +53,7 @@
           <div class="card">
             <div class="card-header clearfix">
               <h5 class="pull-left">Cars</h5>
-              <a ng-click="toggleNewCarpool()" class="pull-right btn btn-link" ng-disabled="!rspved">Add</a>
+              <a ng-click="toggleNewCarpool()" class="pull-right btn btn-link" ng-hide="!rspved">Add</a> 
             </div>
             <div class="card-body">
               <form ng-submit="addCarpool()" ng-show="newCarpool">
@@ -79,7 +79,7 @@
           <div class="card">
             <div class="card-header clearfix">
               <h5 class='pull-left'>How to Prepare</h5>
-              <a class="pull-right btn btn-link" ng-click="toggleNewTodo()" ng-disabled="!rspved">Add</a>
+              <a class="pull-right btn btn-link" ng-click="toggleNewTodo()" ng-hide="!rspved">Add</a> 
             </div>
             <div class="card-body">
               <form ng-submit="addTodo()" ng-show="newTodo">
@@ -97,14 +97,12 @@
           <div class="card">
             <div class="card-header clearfix">
               <h5 class='pull-left'>RSVPs</h5>
-              <a ng-click="rsvp()" ng-disable="rsvped || !invited" class="btn btn-primary pull-right">RSVP</a>
+              <a ng-click="rsvp()" ng-disabled="rsvped || !invited" class="btn btn-primary pull-right">RSVP</a>
             </div>
             <div class="card-body">
               <div class="media" ng-repeat="rsvp in zoink.rsvps">
                 <div class="media-left">
-                  <a href="#">
-                    <img ng-src="{{rsvp.picUrl}}" class="media-object img-circle" width="40px" alt="{{rsvp.name}}">
-                  </a>
+                  <img ng-src="{{rsvp.picUrl}}" class="media-object img-circle" width="40px" alt="{{rsvp.name}}">
                 </div>
                 <div class="media-body">
                   <h5 class="media-heading">{{rsvp.name}}</h5>
@@ -115,15 +113,15 @@
           <div class="card">
             <div class="card-header clearfix">
               <h5 class='pull-left'>Invites</h5>
-              <a class="pull-right btn btn-link" ng-click="toggleNewInvite()" ng-disabled="!rspved">Add</a>
+              <a class="pull-right btn btn-link" ng-click="toggleNewInvite()" ng-hide="!rspved">Add</a> 
             </div>
             <div class="card-body">
               <form ng-submit="addInvite()" ng-show="newInvite">
                 <div class="form-group">
-                  <input type="text" class="form-control" required ng-model="invite" focus-me="{{newInvite}}"/>
+                  <input type="email" class="form-control" required ng-model="invite" focus-me="{{newInvite}}"/>
                 </div>
               </form>
-              <p ng-repeat="invite in zoink.invites">{{invite}}</p>
+              <p class="invite" ng-repeat="invite in zoink.invites | reverse">{{invite}}</p>
             </div>
           </div>  
         </div>

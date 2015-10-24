@@ -4,6 +4,54 @@
 /* Services */
 
 angular.module('myApp.services', [])
+  .service("Auth", ['$rootScope', function($rootScope) {
+    return {
+      isLoggedIn: function() {
+        var ref = new Firebase("https://hoosin.firebaseio.com");
+        var authData = ref.getAuth();
+
+        if (authData) {
+          console.log("User " + authData.uid + " is logged in with " + authData.provider)
+          return authData
+        } else {
+          console.log("User is logged out");
+          return false
+        }
+      },
+      assertValidLoginAttempt: function(user) {
+         if(!user.email) {
+            return 'Please enter an email address';
+         }
+         else if(!user.password) {
+            return 'Please enter a password';
+         }
+         else if(user.signupMode && (user.password !== user.confirm) ) {
+            return 'Passwords do not match';
+         }
+         return true
+      },
+      handleAuthError: function(error) {
+        switch (error.code) {
+          case "INVALID_EMAIL":
+            return "Email or password incorrect"
+            break;
+          case "INVALID_PASSWORD":
+            return "Email or password incorrect"
+            break;
+          case "INVALID_USER":
+            return "No account found"
+            break;
+          case "EMAIL_TAKEN":
+            return "Email already taken"
+            break;
+          default:
+            return "Error connecting: " + error;
+        }
+      }
+
+
+    }
+  }])
   // .service("Zoink", ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject) {
   //   var ref = new Firebase("https://hoosin.firebaseio.com/zoinks");
 
