@@ -104,27 +104,19 @@ angular.module('myApp.controllers', [])
       $scope.toggleSidenav = function() {
          $scope.$broadcast('toggleSidenav');
       }
-
-      $scope.createZoink = function() {
-         Zoink.save($scope.zoink, 
-            function (data) {
-
-            },
-            function (error) {
-
-            }
-         )
-         $scope.zoink = {};
-         //TODO HIDE MODAL
-      }
    }])
 
    .controller('HomeCtrl', ['$scope', function($scope) {
 
    }])
 
-   .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', 'Zoink', function($scope, $rootScope, Zoink) {
-      $scope.zoinks = Zoink.all();
+   .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', '$firebaseArray', function($scope, $rootScope, $firebaseArray) {
+      var zoinksRef = new Firebase('https://hoosin.firebaseio.com/zoinks');
+      $scope.zoinks = $firebaseArray(zoinksRef);
+
+      $scope.goToZoink = function(zoink) {
+        $scope.zoinks[zoink].$id
+      }
 
       $scope.showSidenav = true;
       $scope.$on('toggleSidenav', function() {
@@ -132,19 +124,23 @@ angular.module('myApp.controllers', [])
       })
    }])
 
-   .controller('NewZoinkCtrl', ['$scope', 'Zoink', '$location', function($scope, Zoink, $location) {
+   .controller('NewZoinkCtrl', ['$scope', '$location', '$firebaseArray', function($scope, $location, $firebaseArray) {
       $scope.zoink = {};
       $scope.createZoink = function() {
-        console.log($scope.zoink)
-        Zoink.save($scope.zoink, function(zoink) {
-          $location.path('/zoink' + zoink.id)
-        })
+        var zoinksRef = new Firebase('https://hoosin.firebaseio.com/zoinks');
+        $firebaseArray(zoinksRef).$add($scope.zoink).then(function(ref) {
+          ref.update({ key: ref.key()});
+          $location.path('/zoinks/' + ref.key());
+          $('#new-zoink').modal('hide');
+        });
+        
       }
    }])
 
-   .controller('ZoinkShowCtrl', ['$scope', '$routeParams', 'Zoink', function($scope, $routeParams, Zoink) {
-      $scope.zoink = Zoink.get($routeParams.id);
-      
+   .controller('ZoinkShowCtrl', ['$scope', '$routeParams', '$firebaseObject', function($scope, $routeParams, $firebaseObject) {
+      var ref = new Firebase("https://hoosin.firebaseio.com/zoinks/" + $routeParams.id);
+      $firebaseObject(ref).$bindTo($scope, "zoink");
+
       $scope.showSidenav = true;
       $scope.$on('toggleSidenav', function() {
          $scope.showSidenav = !$scope.showSidenav;

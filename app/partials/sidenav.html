@@ -7,11 +7,11 @@
     <a class="btn btn-info btn-block" data-toggle="modal" data-target="#new-zoink">New Zoink</a>        
   </div>
   <ul class='margin-top'>
-    <a ng-repeat="zoink in zoinks" href="#/zoink/{{zoink.id}}">
+    <a ng-repeat="z in zoinks"href="#/zoinks/{{z.key}}">
       <li>
-        <b>{{zoink.title}}</b> 
+        <b>{{z.title}}</b> 
         <br>
-        <small class='text-muted'>{{zoink.happeningOn}}</small>
+        <small class='text-muted'>{{z.happeningOn}}</small>
       </li>
     </a>
   </ul>
