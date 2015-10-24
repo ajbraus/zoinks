@@ -6,7 +6,8 @@ angular.module('myApp', ['myApp.filters',
                          'myApp.directives', 
                          'myApp.controllers',
                          'ngAnimate',
-                         'ngRoute'])
+                         'ngRoute',
+                         'firebase'])
 
     .config(['$routeProvider', function($routeProvider) {
        $routeProvider.when('/home', {
@@ -14,7 +15,7 @@ angular.module('myApp', ['myApp.filters',
           controller: 'HomeCtrl'
        });
 
-       $routeProvider.when('/zoink/:id', {
+       $routeProvider.when('/zoinks/:id', {
           templateUrl: 'partials/zoink-show.html',
           controller: 'ZoinkShowCtrl'
        });

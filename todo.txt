@@ -1,9 +1,27 @@
-create zoink
-currentUser rsvps
-add invites (send email), purchase, requirements, todos, and carpools
-  disable buttons if not rspved
+
+DONE create zoink
+DONE add invite
+DONE if invited allow to rsvp 
+DONE rsvp
+
+create zoink - default with rsvp of currentuser
+
+if rsvped 
+  add carpool
+  add invites
+  add requirements
+  add purchases
+  add todos
+
+denormalize the children
+  invites
+  rsvps
+  carpools
+  ...
 currentUser claims requirement
 post chat in zoink chat room
+
+send email when invite
 
 prices modal
   - Free: Planner and 4 Invites 

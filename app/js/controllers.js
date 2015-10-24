@@ -3,67 +3,27 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-   .controller('MainCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+   .controller('MainCtrl', ['$scope', '$rootScope', 'Auth',  function($scope, $rootScope, Auth) {
       $scope.signupMode = false;
       $scope.user = {};
 
-      function authDataCallback(authData) {
-        if (authData) {
-          $scope.loggedIn = true;
-          console.log("User " + authData.uid + " is logged in with " + authData.provider);
-          $scope.user = {};
-        } else {
-          $scope.loggedIn = false;
-          console.log("User is logged out");
-        }
-      }
-
-      function assertValidLoginAttempt(user) {
-         if(!user.email) {
-            console.log(user)
-            $scope.err = 'Please enter an email address';
-         }
-         else if(!user.password) {
-            $scope.err = 'Please enter a password';
-         }
-         else if(user.signupMode && (user.password !== user.confirm) ) {
-            $scope.err = 'Passwords do not match';
-         }
-         return !$scope.err;
-      }
-
       var ref = new Firebase("https://hoosin.firebaseio.com");
-      ref.onAuth(authDataCallback);
+      Auth.isLoggedIn();
 
-      function handleAuthError(error) {
-        switch (error.code) {
-          case "INVALID_EMAIL":
-            $scope.err = "Email or password incorrect"
-            break;
-          case "INVALID_PASSWORD":
-            $scope.err = "Email or password incorrect"
-            break;
-          case "INVALID_USER":
-            $scope.err = "No account found"
-            break;
-          case "EMAIL_TAKEN":
-            $scope.err = "Email already taken"
-            break;
-          default:
-            $scope.err = "Error connecting: " + error;
-        }
-      }
+      $rootScope.$on('loggedIn', function() {
+        $scope.loggedIn = true;
+      })
 
       $scope.login = function() {
          $scope.err = null;
          console.log('logging in')
 
-         if (assertValidLoginAttempt($scope.user)) {
+         if (Auth.assertValidLoginAttempt($scope.user)) {
             ref.authWithPassword($scope.user, function(error, authData) {
               if (error) { 
-                handleAuthError(error);
+                $scope.err = Auth.handleAuthError(error);
               } else {
-                authDataCallback(authData);
+                $rootScope.$broadcast('loggedIn');
                 $scope.$apply(function() {
                   $('#login-modal').modal('hide');
                 });
@@ -73,20 +33,22 @@ angular.module('myApp.controllers', [])
       };
 
       $scope.createAccount = function() {
-        if (assertValidLoginAttempt($scope.user)) {
+        $scope.err = Auth.assertValidLoginAttempt($scope.user);
+
+        if (!$scope.err) {
           ref.createUser({
             email: $scope.user.email,
             password: $scope.user.password
           }, function(error, userData) {
             if (error) {
-              handleAuthError(error);
+              $scope.err = Auth.handleAuthError(error);
             } else {
               console.log("Successfully created user account with uid:", userData.uid);
               ref.authWithPassword({
                 email: $scope.user.email,
                 password: $scope.user.password
               }, function(error, authData) {
-                authDataCallback(authData);
+                Auth.isLoggedIn(authData);
                 $scope.$apply(function() {
                   $('#login-modal').modal('hide');
                 });
@@ -104,27 +66,19 @@ angular.module('myApp.controllers', [])
       $scope.toggleSidenav = function() {
          $scope.$broadcast('toggleSidenav');
       }
-
-      $scope.createZoink = function() {
-         Zoink.save($scope.zoink, 
-            function (data) {
-
-            },
-            function (error) {
-
-            }
-         )
-         $scope.zoink = {};
-         //TODO HIDE MODAL
-      }
    }])
 
    .controller('HomeCtrl', ['$scope', function($scope) {
 
    }])
 
-   .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', 'Zoink', function($scope, $rootScope, Zoink) {
-      $scope.zoinks = Zoink.all();
+   .controller('ZoinksIndexCtrl', ['$scope', '$rootScope', '$firebaseArray', function($scope, $rootScope, $firebaseArray) {
+      var zoinksRef = new Firebase('https://hoosin.firebaseio.com/zoinks');
+      $scope.zoinks = $firebaseArray(zoinksRef);
+
+      $scope.goToZoink = function(zoink) {
+        $scope.zoinks[zoink].$id
+      }
 
       $scope.showSidenav = true;
       $scope.$on('toggleSidenav', function() {
@@ -132,36 +86,74 @@ angular.module('myApp.controllers', [])
       })
    }])
 
-   .controller('NewZoinkCtrl', ['$scope', 'Zoink', '$location', function($scope, Zoink, $location) {
+   .controller('NewZoinkCtrl', ['$scope', '$location', '$firebaseArray', 'Auth', function($scope, $location, $firebaseArray, Auth) {
       $scope.zoink = {};
+      var currentUser = Auth.isLoggedIn();
       $scope.createZoink = function() {
-        console.log($scope.zoink);
-        Zoink.save($scope.zoink, function(zoink) {
-          $location.path('/zoink' + zoink.id)
-        })
+        var zoinksRef = new Firebase('https://hoosin.firebaseio.com/zoinks');
+        $firebaseArray(zoinksRef).$add($scope.zoink).then(function(ref) {
+          ref.update({ key: ref.key()});
+          $firebaseArray(ref.child('rsvps'))
+            .$add({
+              email: currentUser.password.email,
+              picUrl: "",
+              name: "Adam Braus"
+            })
+          $location.path('/zoinks/' + ref.key());
+          $('#new-zoink').modal('hide');
+        });
       }
    }])
 
-   .controller('ZoinkShowCtrl', ['$scope', '$routeParams', 'Zoink', function($scope, $routeParams, Zoink) {
-      $scope.zoink = Zoink.get($routeParams.id);
-      
+   .controller('ZoinkShowCtrl', ['$scope', '$routeParams', '$firebaseObject', '$firebaseArray', 'Auth', function($scope, $routeParams, $firebaseObject, $firebaseArray, Auth) {
+      var ref = new Firebase("https://hoosin.firebaseio.com/zoinks/" + $routeParams.id);
+      $firebaseObject(ref).$bindTo($scope, "zoink");
+
       $scope.showSidenav = true;
       $scope.$on('toggleSidenav', function() {
          $scope.showSidenav = !$scope.showSidenav;
       })
 
-      // TODO
-      // $scope.invited = currentUser.email.indexOf($scope.zoink.invites) > -1;
-      // $scope.rsvped = currentUser.indexOf($scope.zoink.rsvps) > -1;
+      $scope.invites = $firebaseArray(ref.child('invites'));
+      $scope.rsvps = $firebaseArray(ref.child('rsvps'));
+
+      var currentUser = Auth.isLoggedIn();
+
+      ref.child('invites').on('value', function(snap, prevKey) {
+        if (currentUser && snap.val() == currentUser.password.email) {
+          $scope.invited = true;
+        }
+      });
+
+      ref.child('rsvps').on('value', function(snap, prevKey) {
+        if (currentUser && snap.val() == currentUser.password.email) {
+          $scope.rsvped = true;
+        }
+      });
+
+      // INVITES
+      $scope.toggleNewInvite = function() {
+         $scope.newInvite = !$scope.newInvite;
+      }
+
+      $scope.addInvite = function() {
+        if (!(_.pluck($scope.invites, '$value').indexOf($scope.invite) > -1)) {
+          $firebaseArray(ref.child('invites')).$add($scope.invite);
+          $scope.newInvite = false;
+          $scope.invite = '';
+        } else {
+          console.log('Invite already added')
+        }
+      }
 
       $scope.rsvp = function() {
-         // TODO
-         if (!$scope.rsvped) {
-            // $scope.zoink.rsvps.push(currentUser);   
-         } else {
-            // splice currentUser out of $scope.zoink.rsvps
-         }
-         $scope.rsvped = !$scope.rsvped;
+         $firebaseArray(ref.child('rsvps'))
+         .$add({
+          email: currentUser.password.email,
+          picUrl: "",
+          name: "Adam Braus"
+         });
+         $scope.rsvped = true;
       }
 
       $scope.joinCar = function(carpool) {
@@ -204,16 +196,6 @@ angular.module('myApp.controllers', [])
          $scope.zoink.todos.unshift($scope.todo)
          $scope.newTodo = false;
          $scope.todo = {};
-      }
-
-      // INVITES
-      $scope.toggleNewInvite = function() {
-         $scope.newInvite = !$scope.newInvite;
-      }
-      $scope.addInvite = function() {
-         $scope.zoink.invites.unshift($scope.invite)
-         $scope.newInvite = false;
-         $scope.invite = {};
       }
       
    }])
